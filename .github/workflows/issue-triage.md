@@ -175,7 +175,7 @@ tools:
   github:
     toolsets: [issues, pull_requests]
     lockdown: false
-    allowed-repos: [azure/azure-sdk-for-java]
+    allowed-repos: [samvaity/azure-sdk-for-java, azure/azure-sdk-for-java]
     min-integrity: none
 
 timeout-minutes: 10
